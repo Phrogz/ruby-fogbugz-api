@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>new (FogBugz)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/fogbugz-api.rb, line 73</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">url</span>,<span class="ruby-identifier">use_ssl</span>=<span class="ruby-keyword kw">false</span>,<span class="ruby-identifier">token</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-ivar">@url</span> = <span class="ruby-identifier">url</span>
+    <span class="ruby-ivar">@use_ssl</span> = <span class="ruby-identifier">use_ssl</span>
+    <span class="ruby-identifier">connect</span>
+
+    <span class="ruby-comment cmt"># Attempt to grap api.xml file from the server specified by url.  Will let</span>
+    <span class="ruby-comment cmt"># us know API is functional and verion matches this class</span>
+    <span class="ruby-identifier">result</span> = <span class="ruby-constant">Hpricot</span>.<span class="ruby-constant">XML</span>(<span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">get</span>(<span class="ruby-value str">&quot;/api.xml&quot;</span>).<span class="ruby-identifier">body</span>)
+
+    <span class="ruby-ivar">@api_version</span> = (<span class="ruby-identifier">result</span><span class="ruby-operator">/</span><span class="ruby-value str">&quot;version&quot;</span>).<span class="ruby-identifier">inner_html</span>.<span class="ruby-identifier">to_i</span>
+    <span class="ruby-ivar">@api_minversion</span> = (<span class="ruby-identifier">result</span><span class="ruby-operator">/</span><span class="ruby-value str">&quot;minversion&quot;</span>).<span class="ruby-identifier">inner_html</span>.<span class="ruby-identifier">to_i</span>
+    <span class="ruby-ivar">@api_url</span> = <span class="ruby-value str">&quot;/&quot;</span> <span class="ruby-operator">+</span> (<span class="ruby-identifier">result</span><span class="ruby-operator">/</span><span class="ruby-value str">&quot;url&quot;</span>).<span class="ruby-identifier">inner_html</span>
+
+    <span class="ruby-comment cmt"># Make sure this class will work w/ API version</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">FogBugzError</span>, <span class="ruby-value str">&quot;API version mismatch&quot;</span> <span class="ruby-keyword kw">if</span> (<span class="ruby-constant">API_VERSION</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@api_minversion</span>)
+
+    <span class="ruby-ivar">@token</span> = <span class="ruby-identifier">token</span> <span class="ruby-value">? </span><span class="ruby-identifier">token</span> <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;&quot;</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

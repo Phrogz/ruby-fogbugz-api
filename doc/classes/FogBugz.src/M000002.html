@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>logon (FogBugz)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/fogbugz-api.rb, line 97</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">logon</span>(<span class="ruby-identifier">email</span>,<span class="ruby-identifier">password</span>)
+    <span class="ruby-identifier">cmd</span> = {<span class="ruby-value str">&quot;cmd&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;logon&quot;</span>, <span class="ruby-value str">&quot;email&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">email</span>, <span class="ruby-value str">&quot;password&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">password</span>}
+
+    <span class="ruby-identifier">result</span> = <span class="ruby-constant">Hpricot</span>.<span class="ruby-constant">XML</span>(<span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">post</span>(<span class="ruby-ivar">@api_url</span>, <span class="ruby-identifier">to_params</span>(<span class="ruby-identifier">cmd</span>)).<span class="ruby-identifier">body</span>)
+
+    <span class="ruby-keyword kw">if</span> (<span class="ruby-identifier">result</span><span class="ruby-operator">/</span><span class="ruby-value str">&quot;error&quot;</span>).<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">1</span>
+      <span class="ruby-comment cmt"># error code 1 = bad login</span>
+      <span class="ruby-comment cmt"># error code 2 = ambiguous name</span>
+      <span class="ruby-keyword kw">case</span> (<span class="ruby-identifier">result</span><span class="ruby-operator">/</span><span class="ruby-value str">&quot;error&quot;</span>).<span class="ruby-identifier">first</span>[<span class="ruby-value str">&quot;code&quot;</span>]
+        <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;1&quot;</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-constant">FogBugzError</span>, (<span class="ruby-identifier">result</span><span class="ruby-operator">/</span><span class="ruby-value str">&quot;error&quot;</span>).<span class="ruby-identifier">inner_html</span>
+        <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;2&quot;</span>
+          <span class="ruby-identifier">ambiguous_users</span> = []
+          (<span class="ruby-identifier">result</span><span class="ruby-operator">/</span><span class="ruby-value str">&quot;person&quot;</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">person</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">ambiguous_users</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">CDATA_REGEXP</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">person</span>.<span class="ruby-identifier">inner_html</span>)[<span class="ruby-value">1</span>]
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-constant">FogBugzError</span>, (<span class="ruby-identifier">result</span><span class="ruby-operator">/</span><span class="ruby-value str">&quot;error&quot;</span>).<span class="ruby-identifier">inner_html</span> <span class="ruby-operator">+</span> <span class="ruby-value str">&quot; &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ambiguous_users</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;, &quot;</span>)
+      <span class="ruby-keyword kw">end</span>  <span class="ruby-comment cmt"># case</span>
+    <span class="ruby-keyword kw">elsif</span> (<span class="ruby-identifier">result</span><span class="ruby-operator">/</span><span class="ruby-value str">&quot;token&quot;</span>).<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+      <span class="ruby-comment cmt"># successful login</span>
+      <span class="ruby-ivar">@token</span> = <span class="ruby-constant">CDATA_REGEXP</span>.<span class="ruby-identifier">match</span>((<span class="ruby-identifier">result</span><span class="ruby-operator">/</span><span class="ruby-value str">&quot;token&quot;</span>).<span class="ruby-identifier">inner_html</span>)[<span class="ruby-value">1</span>]
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

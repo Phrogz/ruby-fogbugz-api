@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>working_schedule (FogBugz)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/fogbugz-api.rb, line 439</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">working_schedule</span>(<span class="ruby-identifier">ixPerson</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-identifier">cmd</span> = {<span class="ruby-value str">&quot;cmd&quot;</span>=<span class="ruby-operator">&gt;</span><span class="ruby-value str">&quot;listWorkingSchedule&quot;</span>,<span class="ruby-value str">&quot;token&quot;</span>=<span class="ruby-operator">&gt;</span><span class="ruby-ivar">@token</span>}
+    <span class="ruby-identifier">cmd</span> = {<span class="ruby-value str">&quot;ixPerson&quot;</span>=<span class="ruby-operator">&gt;</span><span class="ruby-identifier">ixPerson</span>.<span class="ruby-identifier">to_s</span>}.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">cmd</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ixPerson</span>
+    <span class="ruby-identifier">result</span> = <span class="ruby-constant">Hpricot</span>.<span class="ruby-constant">XML</span>(<span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">post</span>(<span class="ruby-ivar">@api_url</span>,<span class="ruby-identifier">to_params</span>(<span class="ruby-identifier">cmd</span>)).<span class="ruby-identifier">body</span>)
+    <span class="ruby-identifier">return_value</span> = <span class="ruby-identifier">list_process</span>(<span class="ruby-identifier">result</span>,<span class="ruby-value str">&quot;workingSchedule&quot;</span>,<span class="ruby-value str">&quot;ixPerson&quot;</span>)
+    <span class="ruby-identifier">return_value</span> = <span class="ruby-identifier">return_value</span>[<span class="ruby-identifier">return_value</span>.<span class="ruby-identifier">keys</span>[<span class="ruby-value">0</span>]] 
+    <span class="ruby-constant">Hpricot</span>.<span class="ruby-constant">XML</span>(<span class="ruby-identifier">return_value</span>[<span class="ruby-value str">&quot;rgWorkDays&quot;</span>]).<span class="ruby-identifier">each_child</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">return_value</span>[<span class="ruby-identifier">e</span>.<span class="ruby-identifier">name</span>] = (<span class="ruby-identifier">e</span>.<span class="ruby-identifier">inner_html</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;true&quot;</span> <span class="ruby-operator">?</span> <span class="ruby-keyword kw">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">false</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Hpricot</span><span class="ruby-operator">::</span><span class="ruby-constant">Elem</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">return_value</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

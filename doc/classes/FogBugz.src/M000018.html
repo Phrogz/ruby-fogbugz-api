@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>people (FogBugz)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/fogbugz-api.rb, line 304</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">people</span>(<span class="ruby-identifier">fIncludeNormal</span>=<span class="ruby-value str">&quot;1&quot;</span>, <span class="ruby-identifier">fIncludeCommunity</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">fIncludeVirtual</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-identifier">cmd</span> = {
+      <span class="ruby-value str">&quot;cmd&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;listPeople&quot;</span>,
+      <span class="ruby-value str">&quot;token&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@token</span>,
+      <span class="ruby-value str">&quot;fIncludeNormal&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">fIncludeNormal</span>
+    }
+    <span class="ruby-identifier">cmd</span> = {<span class="ruby-value str">&quot;fIncludeCommunity&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;1&quot;</span>}.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">cmd</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">fIncludeCommunity</span>
+    <span class="ruby-identifier">cmd</span> = {<span class="ruby-value str">&quot;fIncludeVirtual&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;1&quot;</span>}.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">cmd</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">fIncludeVirtual</span>
+    <span class="ruby-identifier">result</span> = <span class="ruby-constant">Hpricot</span>.<span class="ruby-constant">XML</span>(<span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">post</span>(<span class="ruby-ivar">@api_url</span>, <span class="ruby-identifier">to_params</span>(<span class="ruby-identifier">cmd</span>)).<span class="ruby-identifier">body</span>)
+    <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">list_process</span>(<span class="ruby-identifier">result</span>,<span class="ruby-value str">&quot;person&quot;</span>,<span class="ruby-value str">&quot;sFullName&quot;</span>)
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
