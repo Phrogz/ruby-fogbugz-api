@@ -3,37 +3,38 @@ require 'cgi'
 module FogBugz
   class QueryBuilder
     def initialize
-      @args = {}
+      @params = Hash.new([])
     end
     
     def size
-      @args.size
+      @params.size
     end
     
     def clear
-      @args.clear
+      @params.clear
     end
     
     def parameter?(param)
-      @args.key?(param)
+      @params.key?(param.to_sym)
     end
     
     def build
-      @args.map {|k, v| "%s=%s" % [k, prepare_value(v)]}.join('&')
+      @params.map {|k, v| "%s=%s" % [k, prepare_value(v)]}.join('&')
     end
     
     def method_missing(name, *args)
       if args.size > 0
-        @args[name] = args.size > 1 ? args.map{|i| i.to_a}.flatten : [args.shift]
+        @params[name.to_sym] = args.size > 1 ? args.map{|i| i.to_a}.flatten.map{|i| i.to_s} : [args.shift]
+        return self
       else
-        return @args[name] if @args.key?(name)
+        return @params[name] if parameter?(name)
         super
       end
     end
     
     private
     def prepare_value(v)
-      v.map{|a| CGI.escape(a)}.join(',')
+      v.map {|i| CGI.escape(i)}.join(',')
     end
   end
 end

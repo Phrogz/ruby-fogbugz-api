@@ -1,4 +1,14 @@
+require 'rake/testtask'
 require 'rake/rdoctask'
+
+task :default => [:test]
+
+desc "Run tests"
+Rake::TestTask.new('test') do |t|
+  t.pattern = 'tests/*_test.rb'
+  t.verbose = true
+  t.warning = true
+end
 
 Rake::RDocTask.new do |rd|
   rd.main = "README.rdoc"
