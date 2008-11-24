@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<filters> 
+		<filter type="builtin" sFilter="ez">My Cases</filter> 
+		<filter type="builtin" sFilter="inbox">Inbox</filter>
+		<filter type="shared" sFilter="49" ><![CDATA[Closed Host Setup]]></filter> 
+		<filter type="shared" sFilter="45" ><![CDATA[Matmon Domain Mgmt]]></filter> 
+		<filter type="shared" sFilter="55" ><![CDATA[No Estimate (all users)]]></filter> 
+		<filter type="shared" sFilter="48" ><![CDATA[Open Host Setup]]></filter> 
+		<filter type="shared" sFilter="11" ><![CDATA[ShowStoppers - ALL]]></filter> 
+		<filter type="shared" sFilter="60" ><![CDATA[Up For Grabs]]></filter> 
+		<filter type="shared" sFilter="51" ><![CDATA[Waiting for Info]]></filter> 
+		<filter type="saved" sFilter="4" ><![CDATA[Jason's tickets]]></filter> 
+		<filter type="saved" sFilter="7" ><![CDATA[Matt's Tickets]]></filter>
+		<filter type="saved" sFilter="6" ><![CDATA[Pete's Tickets]]></filter> 
+		<filter type="saved" sFilter="61" ><![CDATA[Today's Closed]]></filter> 
+		<filter type="saved" sFilter="62" ><![CDATA[Today's Resolved]]></filter> 
+	</filters>
+</response>
