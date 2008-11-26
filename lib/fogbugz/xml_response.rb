@@ -1,6 +1,3 @@
-require 'rubygems'
-require 'nokogiri'
-
 module FogBugz
   class BadResponseError < StandardError; end
   
