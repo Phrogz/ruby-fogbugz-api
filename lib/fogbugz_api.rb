@@ -6,7 +6,6 @@ module FogBugz
 
   # FogBugz super class
   class FogBugzApi
-    
     attr :token, true
     attr :api_version, true
     attr :api_minversion, true

@@ -16,18 +16,23 @@ module FogBugz
       version_callback.call(VERSION_URL)
     end
     
-    module ClassMethods
- 
+    def logon(email, password)
+      resp = execute_cmd('logon', builder.email(email).password(password))
+      self.token = resp.xpath('//token[1]').text
+    end
+    
+    def logout
+      execute_cmd('logout')
+      self.token = nil
+    end
+    
+    module ClassMethods 
       def version
         API_VERSION
       end
       
       def case_columns
         CASE_COLUMNS
-      end
-      
-      def error_codes
-        ERROR_CODES
       end
       
       def version_url
@@ -37,7 +42,7 @@ module FogBugz
     
     protected
     def version_check
-      resp = api_version
+      resp = api_version.to_hash
       self.api_version = resp['version']['$'].to_i
       self.api_minversion = resp['minversion']['$'].to_i
       self.api_url = "/%s" % resp['url']['$']
@@ -46,11 +51,11 @@ module FogBugz
     
     private
     def error_check(resp)
-      raise FogBugzError, resp['error']['$'] if error?(resp)
+      raise FogBugzError, resp.xpath('//error[1]').text if error?(resp)
     end
     
     def error?(resp)
-      return resp.key?('error')
+      return !resp.xpath('//error[1]').empty?
     end
     
     private
@@ -67,29 +72,6 @@ module FogBugz
       dtLastUpdated fReplied fForwarded sTicket ixDiscussTopic dtDue sReleaseNotes
       ixBugEventLastView dtLastView ixRelatedBugs sScoutDescription sScoutMessage
       fScoutStopReporting fSubscribed events)
-    
-    ERROR_CODES = {"0"=>"FogBugz not initialized.  Database may be down or needs to be upgraded",
-                   "1"=>"Log On problem - Incorrect Username or Password",
-                   "2"=>"Log On problem - multiple matches for username",
-                   "3"=>"You are not logged on.",
-                   "4"=>"Argument is missing from query",
-                   "5"=>"Edit problem - the case you are trying to edit could not be found",
-                   "6"=>"Edit problem - the action you are trying to perform on this case is not permitted",
-                   "7"=>"Time tracking problem - you can't add a time interval to this case because the case can't be found, is closed, has no estimate, or you don't have permission",
-                   "8"=>"New case problem - you can't write to any project",
-                   "9"=>"Case has changed since last view",
-                   "10"=>"Search problem - an error occurred in search.",
-                   "12"=>"Wiki creation problem",
-                   "13"=>"Wiki permission problem",
-                   "14"=>"Wiki load error",
-                   "15"=>"Wiki template error",
-                   "16"=>"Wiki commit error",
-                   "17"=>"No such project",
-                   "18"=>"No such user",
-                   "19"=>"Area creation problem",
-                   "20"=>"FixFor creation problem",
-                   "21"=>"Project creation problem",
-                   "22"=>"User creation problem"
-                  }
+      
   end
 end

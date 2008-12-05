@@ -1,6 +1,6 @@
 module FogBugz
   class FogBugzHttpApi < FogBugzApi
-    include HttpTransport, Api, Api::Helpers
+    include HttpTransport, Api, Api::Helpers::Legacy
     
     attr_reader :url, :use_ssl, :port, :secure_port, :method
     
@@ -18,7 +18,7 @@ module FogBugz
     end
     
     def response_handler
-      Proc.new {|r| XmlResponse.new(r).to_hash }
+      Proc.new {|r| XmlResponse.new(r) }
     end
     
     def initialize(url, options={}, token=nil)

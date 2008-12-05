@@ -66,8 +66,15 @@ class XmlResponseHandlerTest < Test::Unit::TestCase
       end
     
       should 'provide support of xpath expressions to in order to search document' do
-        assert_equal 14, @response.xpath('//filter').size, 14
+        assert_equal 14, @response.xpath('/response/filters/filter').size
+        assert_equal 14, @response.xpath('//filter').size
         assert_equal 'Inbox', @response.xpath('//filter[@sFilter="inbox"]').text
+      end
+      
+      should 'not permit bad xpath expression syntax' do
+        assert_raise XPathExpressionError do
+          @response.xpath('\\\\')
+        end
       end
     end
   end

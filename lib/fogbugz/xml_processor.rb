@@ -1,15 +1,14 @@
 module FogBugz
   class BadResponseError < StandardError; end
+  class XPathExpressionError < StandardError; end
     
   module XmlProcessor
     def to_hash
-      @bager_hash ||= make_hash(XmlProcessor.make_node(@doc.root))
+      @bager_hash ||= XmlProcessor.make_node(@doc.root).to_hash
     end
     
     def xpath(expression)
-      @doc.xpath(expression) do |n|
-        yield n if block_given?
-      end
+      XmlProcessor.make_node(@doc.root).xpath(expression)
     end
     
     protected
@@ -22,7 +21,7 @@ module FogBugz
     end
     
     private
-    def make_hash(xml_node)
+    def self.make_hash(xml_node)
       node = Hash.new
       xml_node.attributes.each {|k, v| node["@%s" % k] = v } unless xml_node.text?
       xml_node.children.each do |c|
@@ -43,13 +42,64 @@ module FogBugz
       return node
     end
     
-    class XmlNode  
+    class NodeSet
+      include Enumerable, Comparable
+      def initialize(node_set)
+        @node_set = node_set
+      end
+      
+      def empty?
+        @node_set.empty?
+      end
+      
+      def first
+        @node_set.first
+      end
+      
+      def text
+        @node_set.text
+      end
+      
+      def size
+        @node_set.size
+      end
+      
+      def each
+        @node_set.each {|n| yield XmlProcessor.make_node(n)}
+      end
+      
+      def <=>(other)
+        return -1 unless other.respond_to?(:node_set)
+        node_set <=> other.node_set
+      end
+      
+      private
+      attr_reader :node_set
+    end
+    
+    class XmlNode
       def name
         @node.name
       end
       
+      def xpath(expression)
+        begin
+          NodeSet.new(@node.xpath(expression))
+        rescue RuntimeError => e
+          raise XPathExpressionError.new, e.message
+        end
+      end
+      
+      def text
+        @node.inner_text
+      end
+      
       def text?
         [XML_TEXT_NODE, XML_CDATA_SECTION_NODE].include?(@node.type)  
+      end
+      
+      def to_hash
+        XmlProcessor.make_hash(self)
       end
       
       protected
