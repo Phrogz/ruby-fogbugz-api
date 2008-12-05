@@ -76,6 +76,7 @@ class XmlResponseHandlerTest < Test::Unit::TestCase
           @response.xpath('\\\\')
         end
       end
+      
     end
   end
 end
