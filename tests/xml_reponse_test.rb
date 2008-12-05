@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'test/unit'
 require 'shoulda'
+require File.join(File.dirname(__FILE__), '..', 'lib', 'fogbugz', 'xml_processor')
 require File.join(File.dirname(__FILE__), '..', 'lib', 'fogbugz', 'xml_response')
 include FogBugz
 
@@ -15,21 +16,21 @@ class XmlResponseHandlerTest < Test::Unit::TestCase
   context 'An XmlReponse instance' do
     should 'provide read access to the raw reponse string' do
       raw = File.open(File.join(@data_dir, 'test.xml'), 'r') {|f| f.read }
-      assert_not_nil @response.raw
-      assert_equal @response.raw, raw
+      assert_not_nil @response.raw_xml
+      assert_equal @response.raw_xml, raw
     end
     
     should 'print the raw reponse when object is represented as a string' do
-      assert_equal @response.raw, @response.to_s
+      assert_equal @response.raw_xml, @response.to_s
     end
     
     should 'not allow modification of the raw reponse' do
       assert_raise NoMethodError do
-        @response.raw = 'new response'
+        @response.raw_xml = 'new response'
       end
       raw = File.open(File.join(@data_dir, 'test.xml'), 'r') {|f| f.read }
       resp = XmlResponse.new(raw)
-      assert_not_same raw, resp.raw
+      assert_not_same raw, resp.raw_xml
     end
     
     should 'not permit malformed xml for raw input' do
@@ -40,8 +41,8 @@ class XmlResponseHandlerTest < Test::Unit::TestCase
     
     context 'with welformed raw input' do
       should 'store text node values in hash indexed by $' do
-        @response = XmlResponse.new(@simple_xml)
-        assert_equal = @response.to_hash['$'], 'test'
+        @response = XmlResponse.new('<test>test</test>')
+        assert_equal 'test', @response.to_hash['$']
       end
       
       should 'store attributes in hash indexed by @name' do
@@ -62,6 +63,11 @@ class XmlResponseHandlerTest < Test::Unit::TestCase
          @response = XmlResponse.new(@simple_xml)
          assert_instance_of Array, @response.to_hash['test']
          assert_equal @response.to_hash['test'].first['$'], 'two'
+      end
+    
+      should 'provide support of xpath expressions to in order to search document' do
+        assert_equal 14, @response.xpath('//filter').size, 14
+        assert_equal 'Inbox', @response.xpath('//filter[@sFilter="inbox"]').text
       end
     end
   end
