@@ -1,9 +1,7 @@
 == FogBugz API Todo
 
-* Finish it!  At the moment it is very incomplete.  Pretty much just the list functions, search, and new_case.  Essentially take a look at the FogBugz API and see what is missing. Specifically:
-  * Case manipulation
-    * edit, assign, reactivate, reopen, resolve, close, email, reply, forward
-  * file uploads
+* Finish it! Specifically, the legacy API compatibilty needs to be completed to ensure backward's compat with Austin's original code
+  * file uploads 
   * working schedule
   * time tracking
   * source control
@@ -15,3 +13,5 @@
   * mark as viewed
   * settings
 * Create tests and make sure they work.
+  * XmlProcessing API test coverage is weak at best.  Tested through specs for XmlResponse.
+  * API handling has not been tested.  Good candidate for Mocha for mock service calls.

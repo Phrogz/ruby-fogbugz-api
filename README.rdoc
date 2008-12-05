@@ -3,36 +3,46 @@
 An attempt at creating a wrapper for the FogBugz API in Ruby.
 
 FogBugz: http://www.fogbugz.com/
-
 FogBugz API Docs: http://www.fogcreek.com/FogBugz/docs/60/topics/advanced/API.html
 
-This is very much a work in progress. I needed to scratch an itch with an internal project and started on this. There are many functions of the API which are not yet implemented as a result. Please check the code to see what is done and what is not.
+This is STILL very much a work in progress.  It is a refactoring of Austin's original API wrapper.  There
+were four main goals in the refactoring:
+	
+	1) Provide a single method for executing most of the commands in the API
+		This is accomplised through use of the "lower level" execute_cmd method in the library.  Using this method, 
+		a client should be able to use the most of the FogBugz API through this library.
+	2) Decouple the API from the underlying XML parser.  I wanted to refactor out the dependecy on
+		Hpricot from within the API.  The Xml processing is now refactored into an XmlProcessing module 
+		which is currently implemented with Nokogiri.  Additional implementations may be added in the future.
+	3) Improve test coverage.  I'm interested in learning more about Mocha and mocking.  I plan to fully cover the 
+		API with proper testing without a dependency on an actuall FogBugz server.
+	4) Don't break old clients (too badly ;)).  There is is only one small change in the instantiation of the library.  I use
+		a factory method instead of calling the constructor directly.  Hopefully this impact will be minimal on existing clients.
+		I'm not set in stone on keeping the constructor private so I'm open to suggestions or contributions.  Compatibility
+		with Austin's original interfaces will be achevied through a legacy helper module
 
-If you want to help out please e-mail Austin (austin.moody@gmail.com) and he can add you as a collaborator.
+Please comment on github or contact me directly (gfmurphy@gmail.com) with any input, suggestions, or questions.
 
 == Installation
 
-You can install the gem from github.com by using these commands:
+Currently the only way to install this gem is to package it locally.
+$>rake package
+This will test and bundle the gem and copy it to the dist directory in the source tree.  you can then install the local gem.
 
-gem sources -a http://gems.github.com
+== Gem Dependecies
 
-sudo gem install austinmoody-fogbugz-api
+* Nokogiri
+* Shoulda
 
 == Requirements
 
-* Hpricot (http://code.whytheluckystiff.net/hpricot/)
 * A login to a FogBugz server
 
 == Example Usage
 
-fb = FogBugz.new("my.fogbugzserver.com",true) # create instance
-
+fb = FogBugz.new_http_instance("my.fogbugzserver.com", {:use_ssl => true}) # create instance
 fb.logon("mylogin","mypassword") # logs into FogBugz and sets token
+projects = fb.projects # get the list of projects
+fb.logout
 
-mycases = fb.search("AssignedTo:\"Austin Moody\"") # search terms just as in FogBugz
-
-projects = fb.projects # get a list of projects
-
-fb.logoff # logout
-
-See the code and potentially the wiki at github.com for more information.
+See the code and potentially the wiki at github.com for more information.  Please read the TODO for things yet to be completed.
