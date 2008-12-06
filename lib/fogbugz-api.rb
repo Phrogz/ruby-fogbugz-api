@@ -1,6 +1,7 @@
 require 'rubygems' rescue nil
 require 'net/http'
 require 'fogbugz/query_builder'
+require 'fogbugz/xml'
 require 'fogbugz/xml_processor'
 require 'fogbugz/xml_response'
 require 'fogbugz/http_transport'

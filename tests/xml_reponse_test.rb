@@ -1,13 +1,13 @@
 require 'rubygems'
 require 'test/unit'
 require 'shoulda'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'fogbugz', 'xml_processor')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'fogbugz', 'xml_response')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'fogbugz-api')
 include FogBugz
 
 class XmlResponseHandlerTest < Test::Unit::TestCase
   
   def setup
+    super
     @data_dir = File.join(File.dirname(__FILE__), 'data')
     @response = XmlResponse.new(File.open(File.join(@data_dir, 'test.xml'), 'r') {|f| f.read})
     @simple_xml = '<text number="2" name="george"><paragraph>one</paragraph><test>two</test><test>three</test></text>'
@@ -34,7 +34,7 @@ class XmlResponseHandlerTest < Test::Unit::TestCase
     end
     
     should 'not permit malformed xml for raw input' do
-      assert_raise BadResponseError do
+      assert_raise XmlResponseError do
         XmlResponse.new('Bad Xml')
       end
     end

@@ -2,12 +2,12 @@ require 'rubygems'
 require 'test/unit'
 require 'shoulda'
 require 'cgi'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'fogbugz', 'query_builder')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'fogbugz-api')
 include FogBugz
 
 class QueryBuilderTest < Test::Unit::TestCase
-  
   def setup
+    super
     @builder = QueryBuilder.new
   end
   
