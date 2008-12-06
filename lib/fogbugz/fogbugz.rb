@@ -1,5 +1,4 @@
 module FogBugz
-  
   def self.new_http_instance(url, options={}, token=nil)
     return FogBugzHttpApi.new(url, options, token)
   end
