@@ -40,9 +40,9 @@ This will test and bundle the gem and copy it to the dist directory in the sourc
 
 == Example Usage
 
-fb = FogBugz.new_http_instance("my.fogbugzserver.com", {:use_ssl => true}) # create instance
-fb.logon("mylogin","mypassword") # logs into FogBugz and sets token
-projects = fb.projects # get the list of projects
-fb.logout
+    fb = FogBugz.new_http_instance("my.fogbugzserver.com", {:use_ssl => true}) # create instance
+    fb.logon("mylogin","mypassword") # logs into FogBugz and sets token
+    projects = fb.projects # get the list of projects
+    fb.logout
 
 See the code and potentially the wiki at github.com for more information.  Please read the TODO for things yet to be completed.
