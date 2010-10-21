@@ -5,15 +5,17 @@ module FogBugz
     attr_reader :url, :use_ssl, :port, :secure_port, :method
     
     def version_callback
-      Proc.new {|u| response_handler.call(send_payload(u, builder))}
+      Proc.new {|url|
+        response_handler.call(send_payload(File.join(@root,url), builder))
+      }
     end
     
     def execute_callback
       Proc.new do |c, b, o|
-        b = builder unless b
+        b ||= builder
         b.cmd(c)
         b.token(token) if token
-        response_handler.call(send_payload(api_url, b))
+        response_handler.call(send_payload(File.join(@root,api_url), b))
       end
     end
     
@@ -23,11 +25,15 @@ module FogBugz
     
     def initialize(url, options={}, token=nil)
       super(token)
+      defaults = {
+        :root        => '/',
+        :use_ssl     => false,
+        :port        => 80,
+        :secure_port => 443,
+        :method      => :get
+      }
       @url = url
-      @use_ssl = options.key?(:use_ssl) ? options[:use_ssl] : false
-      @port = options.key?(:port) ? options[:port] : 80
-      @secure_port = options.key?(:secure_port) ? options[:secure_port] : 443
-      @method = options.key?(:method) ? options[:method] : :get
+      @root, @use_ssl, @port, @secure_port, @method = defaults.merge(options).values_at( :root, :use_ssl, :port, :secure_port, :method )
       version_check
     end
     

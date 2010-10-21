@@ -5,7 +5,7 @@ require 'rake/rdoctask'
 
 spec = Gem::Specification.new do |s|
   s.name    = "fogbugz-api"
-  s.version = "0.0.6"
+  s.version = "0.0.7"
   s.date = "2010-10-21"
   s.summary = "Ruby wrapper for FogBugz API"
   

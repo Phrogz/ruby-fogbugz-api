@@ -59,7 +59,7 @@ module FogBugz
     end
     
     private
-    VERSION_URL = '/api.xml'
+    VERSION_URL = 'api.xml'
     
     API_VERSION = 6
   

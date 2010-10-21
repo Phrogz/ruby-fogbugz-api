@@ -15,7 +15,7 @@ module FogBugz
     def send_payload(uri, q_builder)
       connect unless connected?
       q_builder = builder unless q_builder
-      @conn.send(method, [uri, q_builder.build]).body
+      @conn.send(method, [uri, q_builder.build].join ).body
     end
     
     private
