@@ -95,8 +95,11 @@ class XmlTest < Test::Unit::TestCase
   
   context 'A NodeSet instance' do
     should 'indicate if it is empty' do
-      ns = Xml::NodeSet.new(nil)
-      assert ns.empty?
+      # Nokogiri nodesets must be associated with a document
+      # I have no idea what document one might be supposed to create for this
+      # ns = Xml::NodeSet.new(nil)
+      # assert ns.empty?
+
       assert @simple_root.xpath('//notthere').empty?
     end
     

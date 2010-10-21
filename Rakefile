@@ -5,13 +5,13 @@ require 'rake/rdoctask'
 
 spec = Gem::Specification.new do |s|
   s.name    = "fogbugz-api"
-  s.version = "0.0.5"
-  s.date = "2008-12-05"
+  s.version = "0.0.6"
+  s.date = "2010-10-21"
   s.summary = "Ruby wrapper for FogBugz API"
   
-  s.authors = ["Austin Moody","Gregory McIntyre", "George F Murphy"]
+  s.authors = ["Austin Moody","Gregory McIntyre","George F Murphy","Gavin Kistner"]
   s.email = "gfmurphy@gmail.com"
-  s.homepage = "http://github.com/gfmurphy/ruby-fogbugz-api/wikis"
+  s.homepage = "http://github.com/phrogz/ruby-fogbugz-api"
   s.has_rdoc = true
   s.rdoc_options = ["--main", "README.rdoc"]
   s.rdoc_options << "--inline-source"

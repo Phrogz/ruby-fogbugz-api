@@ -7,8 +7,8 @@ module FogBugz
     def self.parse(xml)
       raise XmlResponseError.new, 'xml input is nil' if xml.nil?
       begin
-        XmlDocument.new(Nokogiri::XML.parse(xml, nil, 'UTF-8', Nokogiri::XML::PARSE_NOBLANKS))
-      rescue RuntimeError => e
+        XmlDocument.new(Nokogiri::XML.parse(xml, nil, 'UTF-8', Nokogiri::XML::ParseOptions::NOBLANKS))
+      rescue StandardError => e
         raise XmlResponseError.new, e.message
       end
     end
@@ -65,7 +65,7 @@ module FogBugz
       def xpath(expression)
         begin
           NodeSet.new(@node.xpath(expression))
-        rescue RuntimeError => e
+        rescue StandardError => e
           raise XPathExpressionError.new, e.message
         end
       end
@@ -75,7 +75,7 @@ module FogBugz
       end
       
       def attributes
-        @node.attributes
+        Hash[ *@node.attributes.map{ |name,attr| [ name, attr.value] }.flatten ]
       end
       
       def text?
@@ -104,7 +104,7 @@ module FogBugz
     
     def self.make_badger_hash(xml_node)
       node = Hash.new
-      xml_node.attributes.each {|k, v| node["@%s" % k] = v } unless xml_node.text?
+      xml_node.attributes.each {|name, value| node["@#{name}"] = value } unless xml_node.text?
       xml_node.children.each do |c|
         unless c.text?
           k, v = c.name, make_badger_hash(c)

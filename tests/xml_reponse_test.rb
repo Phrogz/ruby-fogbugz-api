@@ -39,7 +39,7 @@ class XmlResponseHandlerTest < Test::Unit::TestCase
       end
     end
     
-    context 'with welformed raw input' do
+    context 'with well-formed raw input' do
       should 'store text node values in hash indexed by $' do
         @response = XmlResponse.new('<test>test</test>')
         assert_equal 'test', @response.to_hash['$']

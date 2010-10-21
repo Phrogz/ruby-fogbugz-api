@@ -24,7 +24,7 @@ module FogBugz
     
     def method_missing(name, *args)
       if args.size > 0
-        @params[name.to_sym] = args.size > 1 ? args.map{|i| i.to_a}.flatten.map{|i| i.to_s} : [args.shift]
+        @params[name.to_sym] = args.size > 1 ? args.map{ |o| [*o] }.flatten.map{ |o| o.to_s } : [ args.shift ]
         return self
       else
         return @params[name] if parameter?(name)
