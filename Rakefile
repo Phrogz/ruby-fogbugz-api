@@ -17,7 +17,7 @@ spec = Gem::Specification.new do |s|
   s.rdoc_options << "--inline-source"
   s.extra_rdoc_files = ["README.rdoc","LICENSE","TODO"]
   s.add_dependency "nokogiri", [">= 1.0.4"]
-  s.add_dependency "Shoulda", [">= 1.2.0"]
+  s.add_dependency "shoulda", [">= 1.2.0"]
   s.files = FileList['lib/**/*', 'README.rdoc', 'LICENSE', 'TODO']
 end
 
